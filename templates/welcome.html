@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Welcome.css') }}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header>
+            <h1>Welcome, {{ username }}</h1>
+            <div class="header-buttons">
+                <a href="{{ url_for('uploads') }}">
+                    <button class="upload-button">Upload File</button>
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <button class="logout-button">Logout</button>
+                </a>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <!-- Profile Section -->
+            <div class="section-container">
+                <h2>Profile</h2>
+                <ul class="file-list">
+                    <li class="file-item"><strong>Username:</strong> {{ username }}</li>
+                    <li class="file-item"><strong>Role:</strong> {{ 'Superuser' if session.get('is_superuser') else 'User' }}</li>
+                </ul>
+            </div>
+
+            <!-- Courses Section -->
+            <div class="section-container">
+                <h2>Courses</h2>
+                <ul class="file-list">
+                    {% for course in ["Python", "Java", "C", "C++"] %}
+                        <li class="file-item"><a href="{{ url_for('courses') }}">{{ course }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Updates Section (Superuser uploads visible to normal users only) -->
+         <!-- Updates Section -->
+<div class="section-container">
+    <h2>Updates</h2>
+    {% if superuser_files %}
+        <ul class="file-list">
+            {% for file in superuser_files %}
+                <li class="file-item">
+                    <a href="{{ url_for('serve_file', username='varshith', filename=file) }}" target="_blank">
+                        {{ file }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No updates from superuser.</p>
+    {% endif %}
+</div>
+
+            <!-- Time Table Section -->
+            <div class="section-container">
+                <h2>Time Table</h2>
+                <ul class="file-list">
+                    <li class="file-item">Mon: Python</li>
+                    <li class="file-item">Tue: Java</li>
+                    <li class="file-item">Wed: C++</li>
+                    <li class="file-item">Thu: Projects</li>
+                    <li class="file-item">Fri: Assessment</li>
+                </ul>
+            </div>
+
+            <!-- Results Section -->
+            <div class="section-container">
+                <h2>Results</h2>
+                <ul class="file-list">
+                    <li class="file-item">Python: 92%</li>
+                    <li class="file-item">Java: 89%</li>
+                    <li class="file-item">C++: 85%</li>
+                    <li class="file-item">DSA: 90%</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

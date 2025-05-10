@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superuser Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='superuser_dashboard.css') }}">
+    <script>
+        // Handle Add User Form Submission
+        function handleAddUser(event) {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            if (username && password) {
+                alert("User successfully added!");
+            } else {
+                event.preventDefault(); // Prevent form submission if fields are empty
+                alert("Please fill in all fields before adding a user.");
+            }
+        }
+        
+        // Handle Delete User
+        function confirmDeleteUser(event) {
+            const confirmation = confirm("Are you sure you want to delete this user?");
+            if (!confirmation) {
+                event.preventDefault(); // Cancel delete operation
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header class="header">
+            <h1>Superuser Dashboard</h1>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </header>
+
+        <main class="main-content" >
+            <div class="dashboard-container">
+                <!-- Top Row: Manage Users and Existing Users -->
+                <div class="top-row">
+                    <!-- User Management Section -->
+                    <section class="manage-section" style="background-color: white;">
+                        <h2  style="background-color: white;">Manage Users</h2>
+                        <form  style="background-color: white;" method="POST" action="{{ url_for('manage_users') }}">
+                            <div class="input-container" style="background-color: white;">
+                                <label style="background-color: white;" style="background-color: white;" for="username">Username:</label>
+                                <input style="background-color: white;"  type="text" id="username" name="username" required>
+                            </div>
+                            <div class="input-container" style="background-color: white;">
+                                <label style="background-color: white;" for="password">Password:</label>
+                                <input style="background-color: white;" type="password" id="password" name="password" required>
+                            </div>
+                            <button  type="submit" name="action" value="add" onclick="handleAddUser(event)">Add User</button>
+                            <button  type="submit" name="action" value="delete" onclick="confirmDeleteUser(event)">Delete User</button>
+                        </form>
+                    </section>
+
+                    <!-- Existing Users Section -->
+                    <section class="users-section" style="background-color: white;">
+                        <h2  style="background-color: white;">Existing Users</h2>
+                        <ul  style="background-color: white;">
+                            {% for user in users %}
+                                <li style="background-color: white;">{{ user }}</li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                </div>
+
+                <!-- File Management Section -->
+                <section class="file-section" style="background-color: white;">
+                    <h2  style="background-color: white;">Manage Files</h2>
+                    <!-- File Upload Section -->
+                    <section class="file-upload-section">
+                        <h2  style="background-color: white;">Upload Document</h2>
+                        <form  style="background-color: white;" method="POST" action="{{ url_for('uploads') }}" enctype="multipart/form-data">
+                            <div class="input-container"  style="background-color: white;">
+                                <label   style="background-color: white;" for="file">Select File:</label>
+                                <input style="background-color: white;"  type="file" id="file" name="file" required>
+                            </div>
+                            <button type="submit">Upload</button>
+                        </form>
+                    </section>
+
+                    <!-- Existing Files List -->
+                    <ul class="file-list">
+                        {% for file in files %}
+                            <li class="file-item">
+                                <a href="{{ url_for('serve_file', filename=file) }}">{{ file }}</a>
+                                <form method="POST" action="{{ url_for('delete_files') }}" style="display: inline;">
+                                    <input type="hidden" name="selected_files" value="{{ file }}">
+                                    <button type="submit" class="delete-button">Delete</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

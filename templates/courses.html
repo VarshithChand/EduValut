@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Courses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='courses.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Course Management</h1>
+        <div class="header-buttons">
+            <a href="{{ url_for('welcome') }}"><button class="upload-button">Back</button></a>
+            <a href="{{ url_for('logout') }}"><button class="logout-button">Logout</button></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="section">
+            <h2>Available Courses</h2>
+            <ul class="file-list">
+                {% for course in courses %}
+                    <li class="file-item">{{ course }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if is_superuser %}
+        <div class="section">
+            <h2>Manage Courses</h2>
+            <form method="POST">
+                <input type="text" name="course_name" placeholder="Enter course name" required>
+                <button type="submit" name="action" value="add" class="upload-button">Add</button>
+                <button type="submit" name="action" value="delete" class="delete-button">Delete</button>
+            </form>
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>
